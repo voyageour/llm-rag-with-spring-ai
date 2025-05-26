@@ -1,17 +1,12 @@
 package bootiful.service;
 
 import org.springframework.ai.chat.messages.SystemMessage;
-import org.springframework.ai.chat.prompt.ChatOptions;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.chat.prompt.SystemPromptTemplate;
-import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaOptions;
-import org.springframework.ai.rag.Query;
-import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -19,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class Chatbot {
@@ -59,29 +53,29 @@ public class Chatbot {
     @Value("classpath:/News.MD")
     Resource docsToStuffResource;
     private final OllamaChatModel aiClient;
-    private final VectorStoreDocumentRetriever vsr;
+//    private final VectorStoreDocumentRetriever vsr;
 
-    Chatbot(OllamaChatModel aiClient, VectorStoreDocumentRetriever vsr) {
+    Chatbot(OllamaChatModel aiClient/*, VectorStoreDocumentRetriever vsr*/) {
         this.aiClient = aiClient;
-        this.vsr = vsr;
+//        this.vsr = vsr;
     }
 
-    public String chatUsingRAG(String message) {
-       var listOfSimilarDocuments = this.vsr.retrieve(new Query(message));
-        var documents = listOfSimilarDocuments
-                .stream()
-                .map(Document::getContent)
-                .collect(Collectors.joining(System.lineSeparator()));
-        var systemMessage = new SystemPromptTemplate(this.template2)
-                .createMessage(Map.of("documents", documents));
-        var userMessage = new UserMessage(message);
-        var prompt = new Prompt(List.of(systemMessage , userMessage));
-        var aiResponse = aiClient.call(prompt)
-                                .getResult()
-                                .getOutput()
-                                .getContent();
-        return aiResponse;
-    }
+//    public String chatUsingRAG(String message) {
+//       var listOfSimilarDocuments = this.vsr.retrieve(new Query(message));
+//        var documents = listOfSimilarDocuments
+//                .stream()
+//                .map(Document::getContent)
+//                .collect(Collectors.joining(System.lineSeparator()));
+//        var systemMessage = new SystemPromptTemplate(this.template2)
+//                .createMessage(Map.of("documents", documents));
+//        var userMessage = new UserMessage(message);
+//        var prompt = new Prompt(List.of(systemMessage , userMessage));
+//        var aiResponse = aiClient.call(prompt)
+//                                .getResult()
+//                                .getOutput()
+//                                .getContent();
+//        return aiResponse;
+//    }
 
     public String chatWithFewShotLearning(String message) {
         var system = new SystemMessage("You are an assistant that classifies tweet sentiment as Positive, Negative, or Neutral.");
@@ -103,8 +97,7 @@ public class Chatbot {
         """);
         var client = OllamaChatModel.builder().defaultOptions(OllamaOptions.builder().temperature(0.0d).model("llama3").build()).ollamaApi(new OllamaApi()).build();
 
-        String response = client.call(new Prompt(List.of(system, tweets))).getResult().getOutput().getContent();
-        return response;
+        return client.call(new Prompt(List.of(system, tweets))).getResult().getOutput().getText();
     }
 
     public String chatWithStuffing(String message) {
@@ -114,11 +107,11 @@ public class Chatbot {
         map.put("context", docsToStuffResource);
 
         Prompt prompt = promptTemplate.create(map);
-        var aiResponse = aiClient.call(prompt)
+//        chatClient.prompt(userInput).call().content();
+        return aiClient.call(prompt)
                 .getResult()
                 .getOutput()
-                .getContent();
-        return aiResponse;
+                .getText();
     }
 
     public String chat(String message) {

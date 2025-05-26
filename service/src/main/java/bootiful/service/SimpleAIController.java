@@ -57,14 +57,14 @@ public class SimpleAIController {
     }
 
 
-    @GetMapping("/ai/simpleRAG")
-    public ResponseEntity<Map<String, String>> chatRAG(@RequestParam(value = "message") String message) throws Exception {
-        var documents = init(vectorStore, jdbcTemplate, pdfResource);
-        var response = chatbot.chatUsingRAG(message);
-        Map<String, String> response1 = Map.of("response", response);
-        System.out.println(response1);
-        return ResponseEntity.ok(response1);
-    }
+//    @GetMapping("/ai/simpleRAG")
+//    public ResponseEntity<Map<String, String>> chatRAG(@RequestParam(value = "message") String message) throws Exception {
+//        var documents = init(vectorStore, jdbcTemplate, pdfResource);
+//        var response = chatbot.chatUsingRAG(message);
+//        Map<String, String> response1 = Map.of("response", response);
+//        System.out.println(response1);
+//        return ResponseEntity.ok(response1);
+//    }
 
     @GetMapping("/ai/simpleStuff")
     public ResponseEntity<Map<String, String>> chatStuff(@RequestParam(value = "message") String message) throws Exception {
