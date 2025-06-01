@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "9702574b-1191-42f3-8a4b-63a51b5d5b14",
+		"name": "LLM Tutorial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2479077"
+	},
+	"item": [
+		{
+			"name": "Simple Chat",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Few Shot learning",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/ai/fewshot?message=Worried about the weather today",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"ai",
+						"fewshot"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "Worried about the weather today"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple RAG",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/ai/fewshot?message=Worried about the weather today",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"ai",
+						"fewshot"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "Worried about the weather today"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Chat Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userInput\": \"Can you get list of all users\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/chat/ask",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"chat",
+						"ask"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "Can you get list of all users",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

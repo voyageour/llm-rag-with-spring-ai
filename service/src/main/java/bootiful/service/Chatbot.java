@@ -1,5 +1,6 @@
 package bootiful.service;
 
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -52,10 +53,11 @@ public class Chatbot {
 
     @Value("classpath:/News.MD")
     Resource docsToStuffResource;
-    private final OllamaChatModel aiClient;
+    private final ChatClient aiClient;
+//    private final OllamaChatModel aiClient;
 //    private final VectorStoreDocumentRetriever vsr;
 
-    Chatbot(OllamaChatModel aiClient/*, VectorStoreDocumentRetriever vsr*/) {
+    Chatbot(ChatClient aiClient/*, VectorStoreDocumentRetriever vsr*/) {
         this.aiClient = aiClient;
 //        this.vsr = vsr;
     }
@@ -95,8 +97,7 @@ public class Chatbot {
         Tweet: """+message.toString()+"""
         Sentiment:
         """);
-        var client = OllamaChatModel.builder().defaultOptions(OllamaOptions.builder().temperature(0.0d).model("llama3").build()).ollamaApi(new OllamaApi()).build();
-
+        var client = OllamaChatModel.builder().defaultOptions(OllamaOptions.builder().temperature(0.0d).model("llama3.1").build()).ollamaApi(OllamaApi.builder().build()).build();
         return client.call(new Prompt(List.of(system, tweets))).getResult().getOutput().getText();
     }
 
@@ -107,14 +108,10 @@ public class Chatbot {
         map.put("context", docsToStuffResource);
 
         Prompt prompt = promptTemplate.create(map);
-//        chatClient.prompt(userInput).call().content();
-        return aiClient.call(prompt)
-                .getResult()
-                .getOutput()
-                .getText();
+        return aiClient.prompt(prompt).call().content();
     }
 
     public String chat(String message) {
-        return aiClient.call(message);
+        return aiClient.prompt(message).call().content();
     }
 }

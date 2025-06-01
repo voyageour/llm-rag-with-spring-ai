@@ -1,0 +1,54 @@
+logging:
+  level:
+    io:
+      modelcontextprotocol:
+        client: DEBUG
+        spec: DEBUG
+
+spring:
+  ai:
+    mcp:
+      client:
+        toolcallback:
+          enabled: true
+        stdio:
+          servers-configuration: classpath:mcp-servers.json
+        #          connections:
+        #            dummy-user-server:
+        #              command: java
+        #              args:
+        #                - "-Dspring.main.web-application-type=none"
+        #                - "-Dlogging.pattern.console="
+        #                - "-jar"
+        #                - "/Users/sandeep/dev/code/llm/mcp-server-spring-java/target/mcp-spring-java-0.0.1-SNAPSHOT.jar"
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.1
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+#    password: postgres
+#    username: postgres
+
+server:
+  port: 8080
+#  address=0.0.0.0
+
+#  {
+#    "mcpServers": {
+#      "dummy-user-server": {
+#        "command": "java",
+#        "args": [
+#          "-Dspring.ai.mcp.server.stdio=true",
+#          "-Dspring.main.web-application-type=none",
+#          "-Dlogging.pattern.console=",
+#          "-jar",
+#          "path/to/mcp-spring-java-0.0.1-SNAPSHOT.jar"
+#        ]
+#      }
+#    }
+#  }
